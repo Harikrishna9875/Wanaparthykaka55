@@ -1,15 +1,18 @@
 import { useMemo, useState } from "react";
 import Layout from "../components/Layout";
+import { useCart } from "../context/CartContext";
 
 export default function Menu() {
+  const { addToCart } = useCart();
+
   const menuItems = useMemo(
     () => [
       {
         id: 1,
         name: "Chicken Biryani",
         desc: "Aromatic rice + spicy chicken",
-        image: "https://images.unsplash.com/photo-1631515242808-497c3fbd3972?auto=format&fit=crop&w=1200&q=80",
-
+        image:
+          "https://images.unsplash.com/photo-1631515242808-497c3fbd3972?auto=format&fit=crop&w=1200&q=80",
         sizes: [
           { label: "Half", price: 149 },
           { label: "Full", price: 199 },
@@ -20,10 +23,8 @@ export default function Menu() {
         id: 2,
         name: "Paneer Butter Masala",
         desc: "Creamy gravy + soft paneer",
-       image: "https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?auto=format&fit=crop&w=1200&q=80",
-
-
-
+        image:
+          "https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?auto=format&fit=crop&w=1200&q=80",
         sizes: [
           { label: "Regular", price: 179 },
           { label: "Large", price: 229 },
@@ -34,8 +35,8 @@ export default function Menu() {
         id: 3,
         name: "Chicken 65",
         desc: "Crispy fried spicy chicken",
-        image: "https://images.unsplash.com/photo-1562967916-eb82221dfb92?auto=format&fit=crop&w=1200&q=80",
-
+        image:
+          "https://images.unsplash.com/photo-1562967916-eb82221dfb92?auto=format&fit=crop&w=1200&q=80",
         sizes: [
           { label: "Small", price: 99 },
           { label: "Medium", price: 149 },
@@ -46,9 +47,8 @@ export default function Menu() {
         id: 4,
         name: "Veg Fried Rice",
         desc: "Wok tossed veggies + rice",
-        image: "https://images.unsplash.com/photo-1603133872878-684f208fb84b?auto=format&fit=crop&w=1200&q=80",
-
-
+        image:
+          "https://images.unsplash.com/photo-1603133872878-684f208fb84b?auto=format&fit=crop&w=1200&q=80",
         sizes: [
           { label: "Half", price: 119 },
           { label: "Full", price: 169 },
@@ -94,7 +94,6 @@ export default function Menu() {
           </div>
         </div>
 
-        {/* Grid */}
         <div className="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {menuItems.map((item) => {
             const price = getPrice(item);
@@ -105,28 +104,27 @@ export default function Menu() {
                 key={item.id}
                 className="group overflow-hidden rounded-[28px] border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-lg"
               >
-                {/* Image */}
                 <div className="relative">
                   <img
                     className="h-44 w-full object-cover transition duration-700 group-hover:scale-[1.03]"
                     src={item.image}
                     alt={item.name}
+                    onError={(e) => {
+                      e.currentTarget.src =
+                        "https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?auto=format&fit=crop&w=1200&q=80";
+                    }}
                   />
                   <div className="absolute left-4 top-4 rounded-full bg-white/90 px-3 py-1 text-xs font-semibold text-[#ff3b30] shadow-sm">
                     {item.tag}
                   </div>
                 </div>
 
-                {/* Content */}
                 <div className="p-5">
                   <h2 className="text-lg font-extrabold">{item.name}</h2>
                   <p className="mt-1 text-sm text-slate-600">{item.desc}</p>
 
-                  {/* Size */}
                   <div className="mt-4">
-                    <p className="text-xs font-semibold text-slate-500">
-                      Size
-                    </p>
+                    <p className="text-xs font-semibold text-slate-500">Size</p>
                     <div className="mt-2 flex flex-wrap gap-2">
                       {item.sizes.map((s) => {
                         const active = selectedSize[item.id] === s.label;
@@ -153,7 +151,6 @@ export default function Menu() {
                     </div>
                   </div>
 
-                  {/* Qty + Price */}
                   <div className="mt-5 flex items-center justify-between">
                     <div className="flex items-center gap-2 rounded-2xl border border-slate-200 bg-white p-1 shadow-sm">
                       <button
@@ -188,16 +185,27 @@ export default function Menu() {
                     <p className="text-lg font-extrabold">₹{price}</p>
                   </div>
 
-                  {/* Add */}
                   <button
-                    onClick={() => alert(`Added: ${item.name} (${selectedSize[item.id]}) x${currentQty}`)}
+                    onClick={() => {
+                      const size = selectedSize[item.id];
+                      const price = getPrice(item);
+
+                      addToCart({
+                        id: item.id,
+                        name: item.name,
+                        price,
+                        size,
+                        qty: currentQty,
+                        image: item.image,
+                      });
+                    }}
                     className="mt-5 w-full rounded-2xl bg-gradient-to-r from-[#ff3b30] to-[#ffb000] py-3 text-sm font-semibold text-white shadow-lg shadow-[#ffb000]/25 transition hover:-translate-y-[1px] hover:shadow-xl active:translate-y-0"
                   >
                     Add to Cart
                   </button>
 
                   <p className="mt-2 text-xs text-slate-500">
-                    (Dummy add for now — backend cart comes next)
+                    (Frontend cart working now)
                   </p>
                 </div>
               </div>

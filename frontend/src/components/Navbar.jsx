@@ -1,9 +1,15 @@
 import { Link, NavLink } from "react-router-dom";
+import { useCart } from "../context/CartContext";
 
-export default function Navbar({ cartCount = 0 }) {
+export default function Navbar() {
+  const { cartItems } = useCart();
+  const cartCount = cartItems.reduce((sum, x) => sum + x.qty, 0);
+
   const navClass = ({ isActive }) =>
     "text-sm transition " +
-    (isActive ? "text-slate-900 font-semibold" : "text-slate-600 hover:text-slate-900");
+    (isActive
+      ? "text-slate-900 font-semibold"
+      : "text-slate-600 hover:text-slate-900");
 
   return (
     <header className="mx-auto flex max-w-6xl items-center justify-between px-5 py-5">
@@ -18,9 +24,15 @@ export default function Navbar({ cartCount = 0 }) {
       </Link>
 
       <nav className="hidden items-center gap-8 md:flex">
-        <NavLink className={navClass} to="/">Home</NavLink>
-        <NavLink className={navClass} to="/menu">Menu</NavLink>
-        <NavLink className={navClass} to="/orders">Orders</NavLink>
+        <NavLink className={navClass} to="/">
+          Home
+        </NavLink>
+        <NavLink className={navClass} to="/menu">
+          Menu
+        </NavLink>
+        <NavLink className={navClass} to="/orders">
+          Orders
+        </NavLink>
       </nav>
 
       <div className="flex items-center gap-3">

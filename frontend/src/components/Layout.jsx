@@ -9,11 +9,9 @@ export default function Layout({ children }) {
         <div className="absolute -bottom-52 right-[-120px] h-[560px] w-[560px] rounded-full bg-[#ff3b30]/10 blur-3xl" />
       </div>
 
-      <Navbar cartCount={0} />
+      <Navbar />
 
-      <div className="mx-auto max-w-6xl px-5 pb-14">
-        {children}
-      </div>
+      <div className="mx-auto max-w-6xl px-5 pb-14">{children}</div>
     </div>
   );
 }

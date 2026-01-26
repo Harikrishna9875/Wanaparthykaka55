@@ -19,7 +19,8 @@ export default function Home() {
           </h2>
 
           <p className="mt-4 max-w-xl text-base text-slate-600">
-            Order fast, track status, and enjoy fresh meals in Wanaparthy. COD only for now.
+            Order fast, track status, and enjoy fresh meals in Wanaparthy. COD
+            only for now.
           </p>
 
           <div className="mt-7 flex flex-col gap-3 sm:flex-row">
@@ -42,7 +43,9 @@ export default function Home() {
         <div className="flex items-center justify-center">
           <div className="w-full max-w-lg overflow-hidden rounded-[34px] border border-slate-200 bg-white shadow-xl">
             <div className="flex items-center justify-between border-b border-slate-200 px-5 py-4">
-              <p className="text-sm font-extrabold text-slate-800">Today’s Special</p>
+              <p className="text-sm font-extrabold text-slate-800">
+                Today’s Special
+              </p>
               <span className="rounded-full bg-[#ffb000]/20 px-3 py-1 text-xs font-semibold text-[#ff3b30]">
                 OPEN
               </span>
