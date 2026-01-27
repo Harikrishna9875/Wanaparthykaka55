@@ -1,5 +1,5 @@
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from django.http import JsonResponse
 from django.conf import settings
 from django.conf.urls.static import static
@@ -10,6 +10,7 @@ def home(request):
 urlpatterns = [
     path("", home),
     path("admin/", admin.site.urls),
+    path("api/", include("menu.urls")),
 ]
 
 if settings.DEBUG:
