@@ -1,35 +1,41 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useEffect, useState } from "react";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [menuItems, setMenuItems] = useState([]);
+
+  useEffect(() => {
+    fetch("http://localhost:8000/api/menu/")
+      .then((response) => response.json())
+      .then((data) => {
+        setMenuItems(data);
+      })
+      .catch((error) => {
+        console.error("Error fetching menu:", error);
+      });
+  }, []);
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <div style={{ padding: "40px", fontFamily: "Arial" }}>
+      <h1 style={{ color: "#ff6b00" }}>KAKA55 Menu</h1>
+
+      {menuItems.map((item) => (
+        <div
+          key={item.id}
+          style={{
+            border: "1px solid #eee",
+            padding: "20px",
+            marginBottom: "20px",
+            borderRadius: "10px",
+            boxShadow: "0 4px 10px rgba(0,0,0,0.05)",
+          }}
+        >
+          <h2>{item.name}</h2>
+          <p>{item.description}</p>
+          <strong>₹ {item.price}</strong>
+        </div>
+      ))}
+    </div>
+  );
 }
 
-export default App
+export default App;
