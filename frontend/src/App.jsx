@@ -51,6 +51,43 @@ function App() {
     0
   );
 
+  const handleCheckout = async () => {
+    const orderData = {
+      total_amount: totalAmount.toFixed(2),
+      is_free_delivery: totalAmount >= 200,
+      payment_method: "COD",
+      items: cart.map((item) => ({
+        menu_item: item.id,
+        quantity: item.quantity,
+      })),
+    };
+
+    try {
+      const response = await fetch(
+        "http://localhost:8000/api/menu/order/",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(orderData),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Order failed");
+      }
+
+      await response.json();
+
+      alert("Order placed successfully!");
+      setCart([]);
+    } catch (error) {
+      console.error("Checkout error:", error);
+      alert("Something went wrong while placing order.");
+    }
+  };
+
   return (
     <div className="app-container">
       <h1 className="app-title">KAKA55 Menu</h1>
@@ -71,7 +108,9 @@ function App() {
             <span>{item.name}</span>
 
             <div className="cart-controls">
-              <button onClick={() => decreaseQuantity(item.id)}>-</button>
+              <button onClick={() => decreaseQuantity(item.id)}>
+                -
+              </button>
               <span>{item.quantity}</span>
               <button onClick={() => addToCart(item)}>+</button>
             </div>
@@ -83,8 +122,19 @@ function App() {
         {totalAmount >= 200 ? (
           <p className="free-delivery">Free Delivery Applied</p>
         ) : (
-          <p>Add ₹ {(200 - totalAmount).toFixed(2)} more for free delivery</p>
+          <p>
+            Add ₹ {(200 - totalAmount).toFixed(2)} more for free
+            delivery
+          </p>
         )}
+
+        <button
+          className="checkout-btn"
+          onClick={handleCheckout}
+          disabled={cart.length === 0}
+        >
+          Checkout
+        </button>
       </div>
     </div>
   );
