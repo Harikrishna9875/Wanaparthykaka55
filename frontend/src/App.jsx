@@ -52,41 +52,43 @@ function App() {
   );
 
   const handleCheckout = async () => {
-    const orderData = {
-      total_amount: totalAmount.toFixed(2),
-      is_free_delivery: totalAmount >= 200,
-      payment_method: "COD",
-      items: cart.map((item) => ({
-        menu_item: item.id,
-        quantity: item.quantity,
-      })),
-    };
+  if (cart.length === 0) return;
 
-    try {
-      const response = await fetch(
-        "http://localhost:8000/api/menu/order/",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(orderData),
-        }
-      );
+  const orderData = {
+    items: cart.map((item) => ({
+      menu_item: item.id,
+      quantity: item.quantity,
+    })),
+  };
 
-      if (!response.ok) {
-        throw new Error("Order failed");
+  try {
+    const response = await fetch(
+      "http://localhost:8000/api/menu/order/",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(orderData),
       }
+    );
 
-      await response.json();
+    console.log("Response status:", response.status);
 
+    if (response.status === 201 || response.status === 200) {
       alert("Order placed successfully!");
       setCart([]);
-    } catch (error) {
-      console.error("Checkout error:", error);
-      alert("Something went wrong while placing order.");
+    } else {
+      const errorText = await response.text();
+      console.log("Error response:", errorText);
+      alert("Order failed. Check console.");
     }
-  };
+
+  } catch (error) {
+    console.error("Fetch error:", error);
+    alert("Network error while placing order.");
+  }
+};
 
   return (
     <div className="app-container">
@@ -123,8 +125,7 @@ function App() {
           <p className="free-delivery">Free Delivery Applied</p>
         ) : (
           <p>
-            Add ₹ {(200 - totalAmount).toFixed(2)} more for free
-            delivery
+            Add ₹ {(200 - totalAmount).toFixed(2)} more for free delivery
           </p>
         )}
 
